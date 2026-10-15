@@ -1,9 +1,42 @@
-# Surgeon
+<div align="center">
+  <img src=".github/icon.png" width="128" height="128" alt="Surgeon icon">
+
+  # Surgeon
+
+  **Disk-cached, globally deduplicated chunk meshes for Sodium.**
+
+  [![Latest release](https://img.shields.io/github/v/release/SU4G3/surgeon?label=release&color=2e7d32)](https://github.com/SU4G3/surgeon/releases/latest)
+  [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
+  [![Minecraft](https://img.shields.io/badge/minecraft-26.2%20%7C%2026.3-5865F2)](#building)
+  [![Loader: Fabric](https://img.shields.io/badge/loader-fabric-dba41a)](https://fabricmc.net/)
+  [![Requires Sodium](https://img.shields.io/badge/requires-sodium-7ab1e0)](https://modrinth.com/mod/sodium)
+</div>
+
+<br>
 
 A [Sodium](https://modrinth.com/mod/sodium) addon for Fabric that grafts
 previously-built chunk-section meshes back onto revisited terrain instead of
 re-meshing it from scratch, with a globally deduplicated, compressed on-disk
 store for the result.
+
+> **[Download the latest release →](https://github.com/SU4G3/surgeon/releases/latest)**
+
+<details>
+<summary><b>Table of contents</b></summary>
+
+- [Does this actually matter, and where](#does-this-actually-matter-and-where)
+- [How it works](#how-it-works)
+- [Deduplicated, compressed storage](#deduplicated-compressed-storage)
+- [What's cached, what isn't](#whats-cached-what-isnt)
+- [Correctness model](#correctness-model)
+- [Settings](#settings)
+- [MC version differences](#mc-version-differences)
+- [Building](#building)
+- [License](#license)
+
+</details>
+
+---
 
 Sodium already rebuilds a chunk section's mesh (the per-block model/fluid
 quad baking that turns 4096 blocks into a GPU vertex buffer) every time that
@@ -56,6 +89,8 @@ does and doesn't touch, not a measured number.
 - A GPU-bound game, or a CPU fast enough that chunk meshing was never the
   bottleneck to begin with.
 
+---
+
 ## How it works
 
 1. Before Sodium hands a section's rebuild off to a worker thread, a mixin
@@ -70,6 +105,8 @@ does and doesn't touch, not a measured number.
 3. If not (or the section is ineligible for caching), Sodium builds it
    normally, and a second mixin (`ChunkBuilderMeshingTask.execute`)
    writes the result to the cache afterward, if eligible.
+
+---
 
 ## Deduplicated, compressed storage
 
@@ -94,6 +131,8 @@ directly (bumped on every read hit and on a write that finds the content
 already present) - no cross-world reference counting needed. The soft disk
 budget is configurable (default 2 GiB).
 
+---
+
 ## What's cached, what isn't
 
 A section is only cached when it has:
@@ -105,6 +144,8 @@ A section is only cached when it has:
 All three are comparatively cheap to recompute live anyway; the expensive
 part this cache targets is the per-block model/fluid quad baking for the
 solid/cutout passes.
+
+---
 
 ## Correctness model
 
@@ -152,6 +193,8 @@ real correctness regression - a stale mesh could be served. Everything else
 about this hash being "too wide" (extra inputs it didn't strictly need) can
 only ever cost cache hit rate, never correctness.
 
+---
+
 ## Settings
 
 Lives as a page inside Sodium's own video settings screen (via Sodium's
@@ -168,6 +211,8 @@ Reese's Sodium Options use) - look for "Surgeon" there.
 
 Backed by `config/surgeon.properties` if you'd rather edit it directly.
 
+---
+
 ## MC version differences
 
 Sodium's internal `ChunkBuildOutput` class gained a `chunkCaptureTime` field
@@ -179,6 +224,8 @@ signature, the public config API) is byte-identical between the two
 versions, verified by diffing Sodium's own source at both release tags
 rather than assumed. The 26.2 build's `CachedMeshReconstructor` and
 `MixinRenderSectionManager` simply omit the extra constructor argument.
+
+---
 
 ## Building
 
@@ -192,6 +239,8 @@ cd 26.3   # or 26.2
 The built jar lands in `build/libs/`. Requires Sodium (matching the
 `sodium_version` in that directory's `gradle.properties`) installed
 alongside it at runtime.
+
+---
 
 ## License
 
