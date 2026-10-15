@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "surgeon",
+  "version": "${version}",
+  "name": "Surgeon",
+  "description": "Grafts previously-built chunk meshes back onto revisited terrain instead of re-meshing it, with globally deduplicated, compressed on-disk storage for repeated geometry.",
+  "authors": [
+    "surge"
+  ],
+  "license": "MIT",
+  "icon": "assets/surgeon/textures/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.surge.sodiummeshcache.SodiumMeshCacheMod"
+    ],
+    "sodium:config_api_user": [
+      "net.surge.sodiummeshcache.config.SodiumMeshCacheConfig"
+    ]
+  },
+  "mixins": [
+    "sodium-mesh-cache.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "sodium": ">=${sodium_version}",
+    "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": {
+        "id": "sodium"
+      }
+    }
+  }
+}

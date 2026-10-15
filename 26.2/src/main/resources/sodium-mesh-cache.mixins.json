@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.surge.sodiummeshcache.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "MixinRenderSectionManager",
+    "MixinChunkBuilderMeshingTask",
+    "accessor.BuiltSectionInfoInvoker",
+    "accessor.BuiltSectionInfoAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

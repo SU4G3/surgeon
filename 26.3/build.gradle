@@ -1,0 +1,85 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.18.2'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven { url = 'https://maven.caffeinemc.net/releases' }
+    maven { url = 'https://maven.caffeinemc.net/snapshots' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // No explicit mappings() and no "mod*" configurations: this Minecraft
+    // version ships an already-named (unobfuscated) client jar, so there's
+    // no remapping step for Loom to do - matches Sodium's own fabric module
+    // (also on fabric-loom 1.18.2 / MC 26.3), which uses plain
+    // implementation(...) throughout instead of modImplementation(...).
+
+    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    // Pinned directly to each module's own real version rather than
+    // fabricApi.module("name", bundleVersion): that helper's bundle-version
+    // mapping doesn't have entries for every module on a brand-new Minecraft
+    // release yet, and the bundled "fabric-api" artifact itself is a
+    // JarInJar container (nested jars under META-INF/jars/), not something
+    // Gradle can put flat classes from on the compile classpath. These exact
+    // coordinates were read out of that bundle jar's own nested-jar manifest
+    // for 0.161.0+26.3.
+    implementation "net.fabricmc.fabric-api:fabric-api-base:2.0.6+fcdff87f5d"
+    implementation "net.fabricmc.fabric-api:fabric-rendering-v1:27.0.14+901a437c5d"
+    implementation "net.fabricmc.fabric-api:fabric-networking-api-v1:6.3.8+fcdff87f5d"
+    implementation "net.fabricmc.fabric-api:fabric-block-getter-api-v2:2.0.9+3434d6d95d"
+    // Pulled in only because vanilla WorldData is given an extra interface by
+    // a Fabric mixin (DataResourceStore) that javac must be able to resolve
+    // to type-check WorldData.getLevelName() at all, even though we never
+    // call anything from this module ourselves.
+    implementation "net.fabricmc.fabric-api:fabric-resource-loader-v1:3.0.4+fcdff87f5d"
+
+    // Sodium itself: compile-only, present at runtime because it's a hard
+    // dependency declared in fabric.mod.json, not something we bundle.
+    compileOnly "net.caffeinemc:sodium-fabric:${project.sodium_version}"
+    runtimeOnly "net.caffeinemc:sodium-fabric:${project.sodium_version}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', project.minecraft_version
+    inputs.property 'fabric_loader_version', project.fabric_loader_version
+    inputs.property 'sodium_version', project.sodium_version
+
+    filesMatching('fabric.mod.json') {
+        expand(
+            version: project.version,
+            minecraft_version: project.minecraft_version,
+            fabric_loader_version: project.fabric_loader_version,
+            sodium_version: project.sodium_version
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

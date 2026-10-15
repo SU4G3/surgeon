@@ -1,0 +1,15 @@
+# Gradle / Fabric Loom
+.gradle/
+build/
+run/
+*.lock
+.loom-cache/
+
+# IDE
+.idea/
+*.iml
+out/
+.vscode/
+
+# OS
+.DS_Store

@@ -1,0 +1,11 @@
+{
+  "surgeon.option.page": "Surgeon",
+  "surgeon.option.enabled": "Enabled",
+  "surgeon.option.enabled.tooltip": "Caches built chunk section meshes to disk (globally deduplicated by content, compressed) so revisited terrain doesn't need to be re-meshed on rejoin. Only solid/cutout geometry is cached; sections with block entities, animated sprites (water, lava, fire) or translucent geometry (glass) are always rebuilt normally.",
+  "surgeon.option.max_cache_mb": "Max Disk Usage (MB)",
+  "surgeon.option.max_cache_mb.tooltip": "Soft disk budget for the shared mesh blob store, across all worlds and servers. Least-recently-used entries are evicted first once this is exceeded.",
+  "surgeon.option.clear_cache": "Clear Cache",
+  "surgeon.option.clear_cache.tooltip": "Deletes every cached mesh (pointers and blobs, across all worlds and servers) and resets this session's hit/miss counters. Safe at any time - the next rebuild of any section just repopulates it.",
+  "surgeon.option.clear_cache.confirm.title": "Clear Surgeon's mesh cache?",
+  "surgeon.option.clear_cache.confirm.message": "This deletes every cached chunk mesh for every world and server you've played on. It's always safe - terrain just gets re-meshed and re-cached as you revisit it - but this can't be undone."
+}
