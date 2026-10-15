@@ -7,7 +7,7 @@
   "authors": [
     "surge"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "icon": "assets/surgeon/textures/icon.png",
   "environment": "client",
   "entrypoints": {
