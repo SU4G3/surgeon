@@ -64,6 +64,7 @@ processResources {
     inputs.property 'version', project.version
     inputs.property 'minecraft_version', project.minecraft_version
     inputs.property 'fabric_loader_version', project.fabric_loader_version
+    inputs.property 'fabric_api_version', project.fabric_api_version
     inputs.property 'sodium_version', project.sodium_version
 
     filesMatching('fabric.mod.json') {
@@ -71,6 +72,7 @@ processResources {
             version: project.version,
             minecraft_version: project.minecraft_version,
             fabric_loader_version: project.fabric_loader_version,
+            fabric_api_version: project.fabric_api_version,
             sodium_version: project.sodium_version
         )
     }
